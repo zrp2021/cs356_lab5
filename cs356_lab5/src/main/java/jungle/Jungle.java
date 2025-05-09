@@ -2,6 +2,9 @@ package jungle;
 
 import java.util.Random;
 
+// Currently, deadlock can occur if one or more apes are going east, and others are going west. 
+// They get stuck when they meet on the ladder (e.g., both hold rungs and wait for the next in opposite directions).
+
 public class Jungle {
     public static void main(String[] args) {
         int eastBound = 4;
