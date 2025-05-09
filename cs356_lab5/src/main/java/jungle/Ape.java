@@ -1,6 +1,7 @@
 package jungle;
 
 public class Ape extends Thread {
+
     private static final boolean debug = true;
     private static final double rungDelayMin = 0.8;
     private static final double rungDelayVar = 1.0;
@@ -21,15 +22,23 @@ public class Ape extends Thread {
         int move = goingEast ? 1 : -1;
 
         try {
-            if (debug) System.out.println("Ape " + name + " wants rung " + startRung);
+            if (debug) {
+                System.out.println("Ape " + name + " wants rung " + startRung);
+            }
             ladder.grabRung(startRung);
-            if (debug) System.out.println("Ape " + name + " got rung " + startRung);
+            if (debug) {
+                System.out.println("Ape " + name + " got rung " + startRung);
+            }
 
             for (int i = startRung + move; i != endRung + move; i += move) {
                 Jungle.tryToSleep(rungDelayMin, rungDelayVar);
-                if (debug) System.out.println("Ape " + name + " wants rung " + i);
+                if (debug) {
+                    System.out.println("Ape " + name + " wants rung " + i);
+                }
                 ladder.grabRung(i);
-                if (debug) System.out.println("Ape " + name + " got " + i + " releasing " + (i - move));
+                if (debug) {
+                    System.out.println("Ape " + name + " got " + i + " releasing " + (i - move));
+                }
                 ladder.releaseRung(i - move);
             }
             ladder.releaseRung(endRung);
@@ -40,4 +49,3 @@ public class Ape extends Thread {
         }
     }
 }
-

@@ -6,6 +6,7 @@ import java.util.Random;
 // They get stuck when they meet on the ladder (e.g., both hold rungs and wait for the next in opposite directions).
 
 public class Jungle {
+
     public static void main(String[] args) {
         int eastBound = 4;
         int westBound = 2;
@@ -20,7 +21,9 @@ public class Jungle {
             while (nRemaining != 0) {
                 new Ape("E-" + apeCounter++, ladder, true).start();
                 tryToSleep(apeMin, apeVar);
-                if (nRemaining > 0) nRemaining--;
+                if (nRemaining > 0) {
+                    nRemaining--;
+                }
             }
         });
 
@@ -30,7 +33,9 @@ public class Jungle {
             while (nRemaining != 0) {
                 new Ape("W-" + apeCounter++, ladder, false).start();
                 tryToSleep(apeMin, apeVar);
-                if (nRemaining > 0) nRemaining--;
+                if (nRemaining > 0) {
+                    nRemaining--;
+                }
             }
         });
 
@@ -39,6 +44,7 @@ public class Jungle {
     }
 
     private static final Random dice = new Random();
+
     public static void tryToSleep(double secMin, double secVar) {
         try {
             Thread.sleep(Math.round(secMin * 1000) + Math.round(dice.nextDouble() * secVar * 1000));
@@ -47,4 +53,3 @@ public class Jungle {
         }
     }
 }
-

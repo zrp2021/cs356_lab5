@@ -3,12 +3,12 @@ package jungle;
 import java.util.concurrent.Semaphore;
 
 public class Ladder {
+
     private final Semaphore[] rungLocks;
 
     public Ladder(int nRungs) {
         rungLocks = new Semaphore[nRungs];
         for (int i = 0; i < nRungs; i++) {
-            // 1 permit = 1 ape at a time; fair=true for FIFO
             rungLocks[i] = new Semaphore(1, true);
         }
     }
@@ -18,10 +18,14 @@ public class Ladder {
     }
 
     public void grabRung(int which) throws InterruptedException {
-        rungLocks[which].acquire();
+        boolean acquired = rungLocks[which].tryAcquire();
+        if (!acquired) {
+            System.err.println("DEADLOCK WARNING: Ape could not acquire rung " + which + ". Terminating program.");
+            System.exit(1);
+        }
     }
 
     public void releaseRung(int which) {
         rungLocks[which].release();
     }
-} 
+}
