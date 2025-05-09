@@ -6,6 +6,12 @@ public class Ladder {
 
     private final Semaphore[] rungLocks;
 
+    // Coordination for direction-safe crossing
+    private final Semaphore mutex = new Semaphore(1); // protect shared state
+    private final Semaphore directionLock = new Semaphore(1, true); // only one direction at a time
+    private int eastboundCount = 0;
+    private int westboundCount = 0;
+
     public Ladder(int nRungs) {
         rungLocks = new Semaphore[nRungs];
         for (int i = 0; i < nRungs; i++) {
@@ -27,5 +33,37 @@ public class Ladder {
 
     public void releaseRung(int which) {
         rungLocks[which].release();
+    }
+
+    public void enterLadder(boolean goingEast) throws InterruptedException {
+        mutex.acquire();
+        if (goingEast) {
+            if (eastboundCount == 0) {
+                directionLock.acquire();
+            }
+            eastboundCount++;
+        } else {
+            if (westboundCount == 0) {
+                directionLock.acquire();
+            }
+            westboundCount++;
+        }
+        mutex.release();
+    }
+
+    public void exitLadder(boolean goingEast) throws InterruptedException {
+        mutex.acquire();
+        if (goingEast) {
+            eastboundCount--;
+            if (eastboundCount == 0) {
+                directionLock.release();
+            }
+        } else {
+            westboundCount--;
+            if (westboundCount == 0) {
+                directionLock.release();
+            }
+        }
+        mutex.release();
     }
 }
